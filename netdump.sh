@@ -10,7 +10,7 @@
 # 固定値設定
 CAPDIR=capture
 IF=eth0
-ROTATE=10
+ROTATE=600
 
 # 変数設定
 CAPUSER=`id -un`
