@@ -13,12 +13,14 @@ IF=eth0
 ROTATE=600
 
 # 変数設定
-CAPUSER=`id -un`
+#CAPUSER=`id -un`
+CAPUSER=pi
 TS=`date "+%Y%m%d_%H%M%S"`
 
 # ディレクトリ作成（なければ）
 mkdir -p ${CAPDIR}
+chown ${CAPUSER}:${CAPUSER} ${CAPDIR}
 
 # キャプチャ取得
 #sudo tcpdump -i ${IF} -e > ${CAPDIR}/${IF}-${TS}.txt
-sudo tcpdump -i ${IF} -Z ${CAPUSER} -G ${ROTATE} -w ${CAPDIR}/netdump-${IF}-${TS}-%y%m%d_%H%M%S.cap &
+sudo tcpdump -i ${IF} -Z ${CAPUSER} -G ${ROTATE} -w ${CAPDIR}/netdump-${IF}-${TS}-%y%m%d_%H%M%S.cap
