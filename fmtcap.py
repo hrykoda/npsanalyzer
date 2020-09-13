@@ -8,7 +8,7 @@ if len(args) > 1:
 else:
    param = ""
 
-print("param:" + param)
+#print("param:" + param)
 
 #pattern = re.compile('^(.*?) ([^ ,]*).*? > ([^ ,]*).*? length ([^:]*):.*')
 patternIP = re.compile('^(.*?) ([^ ,]*).*? > ([^ ,]*).*? ethertype ([^ ]*) .*? length ([^:]*): ([^ ]*) > ([^ ]*): .*')

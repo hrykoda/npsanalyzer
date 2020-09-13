@@ -1,4 +1,4 @@
-#/bin/sh
+#/bin/bash
 
 # <参考URL>
 # tcpdumpでキャプチャファイルを定期的にローテートさせる方法
@@ -21,4 +21,4 @@ mkdir -p ${CAPDIR}
 
 # キャプチャ取得
 #sudo tcpdump -i ${IF} -e > ${CAPDIR}/${IF}-${TS}.txt
-sudo tcpdump -i ${IF} -Z ${CAPUSER} -G ${ROTATE} -w ${CAPDIR}/netdump-${IF}-${TS}-%y%m%d_%H%M%S.cap
+sudo tcpdump -i ${IF} -Z ${CAPUSER} -G ${ROTATE} -w ${CAPDIR}/netdump-${IF}-${TS}-%y%m%d_%H%M%S.cap &
