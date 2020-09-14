@@ -33,18 +33,30 @@ if [ -f ${TARGET} ]; then
 elif [ -d ${TARGET} ]; then
     writelog "DIR: ${TARGET}"
     mkdir -p ${FMTDIR}
-    max=`find ${TARGET} -name "*.cap" | wc -l`
+    # 件数カウント
+    tcnt=`find ${TARGET} -name "*.cap" | while read f; do
+        fname=$(basename ${f})
+        if [ ${f} -nt ${FMTDIR}/${fname}.txt ]; then
+            echo 1
+        fi
+    done | wc -l`
+    writelog "target count: ${tcnt}"
+    # フォーマット処理
     cnt=0
     find ${TARGET} -name "*.cap" | while read f; do
-        cnt=$((cnt + 1))
-        fname=`basename ${f}`
-        writelog "${cnt}/${max} ${f} > ${FMTDIR}/${fname}.txt"
-        tcpdump -r ${f} -en | python3 ${scriptDir}/fmtcap.py > ${FMTDIR}/${fname}.txt
-        test ${PIPESTATUS[0]} -a ${PIPESTATUS[1]}; ret=$?
-        if [ ${ret} ]; then
-            mv ${f} ${f}.fin
+        fname=$(basename ${f})
+        if [ ${f} -nt ${FMTDIR}/${fname}.txt ]; then
+            cnt=$((cnt + 1))
+            sz=$(ls -l ${f} | awk '{print $5}')
+            writelog "${cnt}/${tcnt} ${sz} ${f} > ${FMTDIR}/${fname}.txt"
+            tcpdump -r ${f} -en | python3 ${scriptDir}/fmtcap.py > ${FMTDIR}/${fname}.tmp
+            test ${PIPESTATUS[0]} -a ${PIPESTATUS[1]}; ret=$?
+            if [ ${ret} ]; then
+                mv ${FMTDIR}/${fname}.tmp ${FMTDIR}/${fname}.txt
+            fi
         fi
     done
+    writelog "end"
 
     # .finファイル名を戻す場合、以下のコマンドを実行
     #find ${TARGET} -name "*.cap.fin" | while read f; do
