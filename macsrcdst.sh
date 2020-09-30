@@ -4,4 +4,4 @@
 # python3コマンドが実行できること
 scriptDir=$(cd `dirname $0`; pwd)
 
-cat $@ | python3 ${scriptDir}/srcdst.py 1
+cat $@ | python3 ${scriptDir}/srcdst.py 1 | sort -k 5,5nr

@@ -19,19 +19,29 @@ sudo systemctl enable netdump
 sudo systemctl is-enabled netdump
 sudo systemctl disable netdump
 
+# フォーマット変換
+npsanalyzer/fmtcap.sh capture
 
-### 参考URL ###
-【Linuxのサービス依存関係と順序関係】systemctl list-dependencies と systemd-analyze の見方 
-https://milestone-of-se.nesuke.com/sv-basic/linux-basic/systemctl-list-dependencies/ 
- systemctl list-dependencies nodered --after
- 
-systemdで確実にネットワークの起動後にサービスを起動させたい場合のメモ 
-https://kernhack.hatenablog.com/entry/2014/09/20/110938 
- sudo systemctl enable systemd-networkd-wait-online
- 
-ネットワークの開始後にスクリプトを実行しますか？ 
-https://qastack.jp/unix/126009/cause-a-script-to-execute-after-networking-has-started 
- sudo vi /lib/systemd/system/nodered.service
- [Unit]
- Wants=network-online.target
- After=network-online.target
+# 集計
+DAY=YYMMDD
+npsanalyzer/srcdst.sh fmtcap/netdump-*-${DAY}_*.cap.txt > srcdst-${DAY}.txt
+npsanalyzer/macsrcdst.sh fmtcap/netdump-*-${DAY}_*.cap.txt > macsrcdst-${DAY}.txt
+
+# IPアドレス、ポート番号、MACアドレスの組み合わせ毎のデータ通信量確認
+npsanalyzer/ipmac.sh fmtcap/netdump-*-${DAY}_*.cap.txt > ipmac-${DAY}.txt
+sort -k 6,6nr ipmac-${DAY}.txt | head
+sort -k 7,7nr ipmac-${DAY}.txt | head
+cat ipmac-${DAY}.txt | awk '{a+=$6; b+=$7} END{print a, b;}'
+
+# MACアドレス毎のデータ通信量確認
+npsanalyzer/mac.sh fmtcap/netdump-*-${DAY}_*.cap.txt > mac-${DAY}.txt
+sort -k 4,4nr mac-${DAY}.txt | head
+sort -k 5,5nr mac-${DAY}.txt | head
+cat mac-${DAY}.txt | awk '{a+=$4} END{print a;}'
+cat mac-${DAY}.txt | awk '{a+=$5} END{print a;}'
+
+# IPアドレス検索
+JPNIC
+https://www.nic.ad.jp/ja/application.html
+APNIC
+http://wq.apnic.net/static/search.html

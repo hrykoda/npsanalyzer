@@ -1,0 +1,1 @@
+npsanalyzer/fmtcap.sh capture/netdump-eth0-20200919_005202-200919_083203.cap | npsanalyzer/srcdst.sh - | sort -k 9,9n | less
