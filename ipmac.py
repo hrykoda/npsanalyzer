@@ -14,21 +14,21 @@ edict = dict()
 for line in sys.stdin:
     line = line.replace( '\n' , '' )
     array = line.split(' ')
-    tim = array[0]
-    esa = array[1]
-    eda = array[2]
-    ety = array[3]
-    eln = int(array[4])
+    tim = array[0] # time
+    esa = array[1] # Ethernet source address
+    eda = array[2] # Ethernet destination address
+    ety = array[3] # Ethernet type
+    eln = int(array[4]) # Ethernet length
 
     if len(args) > 1:
         src = esa
         dst = eda
     else:
         if ety == 'IPv4':
-            isa = array[5]
-            ida = array[6]
-            isas = isa.split('.')
-            idas = ida.split('.')
+            isa = array[5] # IP source address
+            ida = array[6] # IP destination address
+            isas = isa.split('.') # IP source address split
+            idas = ida.split('.') # IP destination address split
             #print(type(isas))
             if len(isas) == 4:
                 src = esa + " " + isas[0] + "."  + isas[1] + "." + isas[2] + "." + isas[3] + " -"
@@ -43,10 +43,10 @@ for line in sys.stdin:
             else:
                 dst = eda + " " + idas[0] + "."  + idas[1] + "." + idas[2] + "." + idas[3] + " " + idas[4]
         elif ety == 'IPv6':
-            isa = array[5]
-            ida = array[6]
-            isas = isa.split('.')
-            idas = ida.split('.')
+            isa = array[5] # IP source address
+            ida = array[6] # IP destination address
+            isas = isa.split('.') # IP source address split
+            idas = ida.split('.') # IP destination address split
             if len(isas) == 1:
                 src = esa + " " + isas[0] + " -"
             elif len(isas[1]) == 5:
