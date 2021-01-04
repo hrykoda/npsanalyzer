@@ -1,6 +1,7 @@
 #!/bin/bash
 scriptDir=$(cd `dirname $0`; pwd)
 scriptName=$(basename $0)
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 GWMAC=84:af:ec:f5:36:9f
 GWIP=192.168.11.1
@@ -23,11 +24,11 @@ rm ${ADIR}/tmp/*
 
 writelog "START"
 
+df -k > ${ADIR}/tmp/df-before-${LYMD}.txt
+
 npsanalyzer/fmtcap.sh capture 2>&1 | tee -a ${ADIR}/tmp/aggregate-${LYMD}.log
 
 wget https://www.cman.jp/network/support/go_access.cgi -q -O - | grep "<th>あなたのIPアドレス<br>" | sed -E 's/.*<p>(.*)<\/p>.*/\1/' > ${ADIR}/tmp/ip-${LYMD}.txt
-
-df -h > ${ADIR}/tmp/df-before-${LYMD}.txt
 
 writelog '# fmtcap/netdump-*-'${SYMD}'_*.cap.txt '$(ls fmtcap/netdump-*-${SYMD}_*.cap.txt | wc -l)
 writelog "## srcdst-${SYMD}.txt"
@@ -44,7 +45,7 @@ npsanalyzer/mac.sh fmtcap/netdump-*-${SYMD}_*.cap.txt > ${ADIR}/tmp/mac-${SYMD}.
 
 writelog "## end"
 
-df -h > ${ADIR}/tmp/df-after-${LYMD}.txt
+df -k > ${ADIR}/tmp/df-after-${LYMD}.txt
 
 writelog "END"
 

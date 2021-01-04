@@ -6,6 +6,7 @@
 scriptDir=$(cd `dirname $0`; pwd)
 scriptName=$(basename $0)
 FMTDIR=fmtcap
+PATH=/usr/sbin:$PATH
 
 usage() {
     if [ "$1" != "" ]; then
